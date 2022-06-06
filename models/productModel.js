@@ -12,8 +12,14 @@ const getProductData=(cb)=>{
     })
 }
 module.exports=class Product{
-    constructor(name){
-        this.name=name
+    constructor(title,image,price,description){
+        this.title=title;
+        this.image=image;
+        this.price=price;
+        this.description=description;
+
+
+
     }
     save(){
         //products.push(this) //push data
