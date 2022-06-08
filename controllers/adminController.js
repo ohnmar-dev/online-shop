@@ -24,10 +24,12 @@ exports.getEditProduct=(req,res,next)=>{
             editing:editMode ,
             product:product
         })
-        console.log(product)
+        
     })
    
-    }
+}
+
+
 // save data 
 exports.postController=(req,res,next)=>{
     const title=req.body.title;
@@ -35,13 +37,29 @@ exports.postController=(req,res,next)=>{
     const price=req.body.price;
     const description=req.body.description;
 
-    const product=new Product(title,image,price,description)
-    console.log(product)
+    const product=new Product(null, title,image,price,description)
     product.save();
     res.redirect('/');
 
 }
+//post edit product
+exports.postEditProduct=(req,res,next)=>{
+    const prodId=req.body.productId;
+    const updateTitle=req.body.title;
+    const updateImage=req.body.image;
+    const updatePrice=req.body.price;
+    const updateDescription=req.body.description;   
 
+    const updateProduct=new Product(
+        prodId,
+        updateTitle,
+        updateImage,
+        updatePrice,
+        updateDescription
+    );
+    updateProduct.save();
+    res.redirect('/admin/products')
+}
 exports.getProducts=(req,res,next)=>{
     Product.fetchAll((products)=>{
         res.render('admin/product',{
