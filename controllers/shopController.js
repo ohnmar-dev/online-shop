@@ -1,6 +1,6 @@
 //class import from productModel
 const Product=require('../models/productModel')
-
+const Cart=require('../models/cartModel')
  
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
@@ -32,6 +32,16 @@ exports.getIndex=(req,res,next)=>{
    })
  };
 
+ //for post cart
+ exports.postCart=(req,res,next)=>{
+   const pordId=req.body.productId;
+  Product.findById(pordId,product=>{
+    Cart.addProduct(pordId, product.price);
+  })
+   
+    res.redirect('/')
+ }
+
   //for chackout
   exports.getCheckout=(req,res,next)=>{
     res.render('shop/checkout',{
@@ -47,3 +57,18 @@ exports.getIndex=(req,res,next)=>{
       pageTitle:'Your Orders'
     })
   };
+
+  //for getDetail
+  exports.getDetail=(req,res,next)=>{
+    const prodId=req.params.productId;
+   Product.findById(prodId,(product)=>{
+    res.render('shop/product-detail',{
+      product:product,
+      path:'/products', 
+      pageTitle:product.title
+    })
+   })
+    
+  };
+
+  

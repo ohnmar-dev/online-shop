@@ -1,10 +1,32 @@
 const Product=require('../models/productModel')
 
 exports.getController=(req,res,next)=>{
-    res.render('admin/add-product', {
+    res.render('admin/edit', {
         pageTitle:"Add Product",
         path:'/admin/add-product',
+        editing:false
     })
+}
+//get edit product
+exports.getEditProduct=(req,res,next)=>{
+    const editMode=req.query.edit //string (true)
+    if(!editMode){
+     return   res.redirect('/')
+    }
+    const prodId=req.params.productId;
+    Product.findById(prodId,(product)=>{
+        if(!product){
+            return res.render('/')
+        }
+        res.render('admin/edit', {
+            pageTitle:"Edit Product",
+            path:'/admin/edit',
+            editing:editMode ,
+            product:product
+        })
+        console.log(product)
+    })
+   
     }
 // save data 
 exports.postController=(req,res,next)=>{
@@ -29,5 +51,6 @@ exports.getProducts=(req,res,next)=>{
         })
 
     })
-
 }
+
+    
