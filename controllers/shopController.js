@@ -74,13 +74,18 @@ exports.getIndex=(req,res,next)=>{
   //for getDetail
   exports.getDetail=(req,res,next)=>{
     const prodId=req.params.productId;
-   Product.findById(prodId,(product)=>{
-    res.render('shop/product-detail',{
-      product:product,
-      path:'/products', 
-      pageTitle:product.title
+    Product.findById(prodId)
+    .then(product=>{
+      res.render('shop/product-detail',{
+        product:product,
+        path:'/products', 
+        pageTitle:product.title
+      })
     })
-   })
+    .catch(err=>{
+      console.log(err)
+    })
+   
     
   };
 

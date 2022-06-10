@@ -1,6 +1,8 @@
 const fs=require('fs')
 const path=require('path')
+const mongodb=require('mongodb');
 const getDb=require('../util/database').getDb
+
 const shopData=path.join(path.dirname(require.main.filename),'data','shopData.json');
 
 const getProductData=(cb)=>{
@@ -13,8 +15,8 @@ const getProductData=(cb)=>{
     })
 }
 module.exports=class Product{
-    constructor(id,title,image,price,description){
-        this.id=id
+    constructor(title,image,price,description){
+
         this.title=title;
         this.image=image;
         this.price=price;
@@ -43,6 +45,19 @@ module.exports=class Product{
         .then(products=>{
             console.log(products)
             return products;
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
+    static findById(prodId){
+        const db=getDb();
+        return db.collection('product')
+        .find({_id:new mongodb.ObjectId(prodId)})
+        .next()
+        .then(product=>{
+            console.log(product)
+            return product;
         })
         .catch(err=>{
             console.log(err)
