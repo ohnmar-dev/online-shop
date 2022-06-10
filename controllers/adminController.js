@@ -1,4 +1,5 @@
 const Product=require('../models/productModel')
+//const {ObjectId}=require('mongodb')
 
 exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
@@ -14,7 +15,8 @@ exports.getEditProduct=(req,res,next)=>{
      return   res.redirect('/')
     }
     const prodId=req.params.productId;
-    Product.findById(prodId,(product)=>{
+    Product.findById(prodId)
+    .then(product=>{
         if(!product){
             return res.render('/')
         }
@@ -24,8 +26,8 @@ exports.getEditProduct=(req,res,next)=>{
             editing:editMode ,
             product:product
         })
-        
     })
+    .catch(err=>console.log(err))
    
 }
 
@@ -58,31 +60,43 @@ exports.postEditProduct=(req,res,next)=>{
     const updateDescription=req.body.description;   
 
     const updateProduct=new Product(
-        prodId,
+       
         updateTitle,
         updateImage,
         updatePrice,
-        updateDescription
+        updateDescription,
+        //new ObjectId(prodId)
+        prodId
     );
     updateProduct.save();
     res.redirect('/admin/products')
 }
 exports.getProducts=(req,res,next)=>{
-    Product.fetchAll((products)=>{
-        res.render('admin/product',{
-            prods:products,
-            pageTitle:"Admin Product",
-            path:'/admin/products'
-        })
-
+   Product.fetchAll()
+   .then(products=>{
+    res.render('admin/product', {
+        prods:products,
+        pageTitle:"Admin Product",
+        path:'/admin/products'
+       
     })
+   })
+   .catch(err=>{
+    console.log(err)
+   })
+
 }
 
 //delete controller
 exports.postDeleteController=(req,res,next)=>{
-    getProductData(id=>{
-        const prodId=req.body.productId;
-        
+ const prodId=req.body.productId;
+    Product.deleteById(prodId)
+    .then(result=>{
+        res.redirect('/admin/products')
+
     })
+    .catch(err=>console.log(err))
+        
+    
 }
     

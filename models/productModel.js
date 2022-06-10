@@ -15,20 +15,30 @@ const getProductData=(cb)=>{
     })
 }
 module.exports=class Product{
-    constructor(title,image,price,description){
+    constructor(title,image,price,description,id){
 
         this.title=title;
         this.image=image;
         this.price=price;
         this.description=description;
+       // this._id=id;
+        this._id= id? new mongodb.ObjectId(id) : null;
 
 
 
     }
     save(){
         const db=getDb();
-        return db.collection('product')
-        .insertOne(this)
+        let dbOp;
+        if(this._id){
+            //updated the product
+            dbOp=db.collection('product')
+                    .updateOne({_id:new mongodb.ObjectId(this._id)},{$set:this})
+
+        }else{
+            dbOp=db.collection('product').insertOne(this);
+        }
+        return dbOp
         .then(result=>{
             console.log(result)
         })
@@ -62,5 +72,15 @@ module.exports=class Product{
         .catch(err=>{
             console.log(err)
         })
+    }
+    //delete product
+    static deleteById(id){
+        const db=getDb();
+        return db.collection('product')
+        .deleteOne({_id:new mongodb.ObjectId(id)})
+        .then(result=>{
+            console.log("Deleted Successfully")
+        })
+        .catch(err=>console.log(err))
     }
 }
