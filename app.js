@@ -1,3 +1,5 @@
+const mongoConnect=require('./util/database').mongoConnect
+
 const express=require('express');
 const bodyParser=require('body-parser')
 const path=require('path')
@@ -18,6 +20,10 @@ app.use(shopRouter)
 app.use(express.static(path.join(__dirname,'public')))
 app.use(errorController.getError)
 
-app.listen(3000,(req,res)=>{
-    console.log("Server is running in port 3000")
+
+
+mongoConnect(()=>{
+    app.listen(3000);
+    console.log("sever is running in port 3000")
+        
 })

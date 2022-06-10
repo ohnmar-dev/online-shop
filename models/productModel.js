@@ -1,5 +1,6 @@
 const fs=require('fs')
 const path=require('path')
+const getDb=require('../util/database').getDb
 const shopData=path.join(path.dirname(require.main.filename),'data','shopData.json');
 
 const getProductData=(cb)=>{
@@ -23,38 +24,28 @@ module.exports=class Product{
 
     }
     save(){
-        
-        getProductData((products)=>{
-            if(this.id){
-            const existingProductIndex=products.findIndex(prod=>prod.id===this.id)
-            const updatedProducts=[...products]
-            updatedProducts[existingProductIndex]=this;
-            fs.writeFile(shopData,JSON.stringify(updatedProducts),(err)=>{
-                console.log(err)
-            })
-            }
-            else{
-            this.id=Math.random().toString();
-            products.push(this);
-            fs.writeFile(shopData,JSON.stringify(products),(err)=>{
-                console.log(err)
-            })
-            }
-            
+        const db=getDb();
+        return db.collection('product')
+        .insertOne(this)
+        .then(result=>{
+            console.log(result)
         })
-        
-    }
-    //show data
-    static fetchAll(cb){
-        getProductData(cb);
+        .catch(err=>{
+            console.log(err)
+        })
     }
 
-    // testing id method
-    static findById(id,cb){
-         getProductData(products=>{
-             const product=products.find(p=>p.id===id);
-             cb(product)
-         }) 
+    static fetchAll(){
+        const db=getDb();
+        return db.collection('product')
+        .find()
+        .toArray()
+        .then(products=>{
+            console.log(products)
+            return products;
+        })
+        .catch(err=>{
+            console.log(err)
+        })
     }
-
 }

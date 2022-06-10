@@ -38,7 +38,14 @@ exports.postController=(req,res,next)=>{
     const description=req.body.description;
 
     const product=new Product(null, title,image,price,description)
-    product.save();
+    product.save()
+    .then(result=>{
+        console.log("Created product successfully!")
+        res.redirect('/admin/products')
+    })
+    .catch(err=>{
+        console.log(err)
+    })
     res.redirect('/');
 
 }
@@ -71,4 +78,11 @@ exports.getProducts=(req,res,next)=>{
     })
 }
 
+//delete controller
+exports.postDeleteController=(req,res,next)=>{
+    getProductData(id=>{
+        const prodId=req.body.productId;
+        
+    })
+}
     

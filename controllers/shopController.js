@@ -4,23 +4,36 @@ const Cart=require('../models/cartModel')
  
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
-  Product.fetchAll((products)=>{
-     res.render('shop/product-list',{
-         prods:products,
-         pageTitle:'All Products',
-         path:'/products'});
+  Product.fetchAll()
+  .then(products=>{
+      res.render('shop/product-list',{
+          prods:products,
+          pageTitle:'All Products',
+          path:'/products'
+        });
+  
+  })
+  .catch(err=>{
+    console.log(err)
   })
    
  }
 
  //show data with fetchAll for index
 exports.getIndex=(req,res,next)=>{
-  Product.fetchAll((products)=>{
-     res.render('shop/index',{
-         prods:products,
-         pageTitle:'Shop',
-         path:'/'});
+
+  Product.fetchAll()
+      .then(products=>{
+          res.render('shop/index',{
+          prods:products,
+          pageTitle:'Shop',
+          path:'/'});
+  
   })
+  .catch(err=>{
+    console.log(err)
+  })
+
    
  }
 
