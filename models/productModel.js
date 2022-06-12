@@ -15,7 +15,7 @@ const getProductData=(cb)=>{
     })
 }
 module.exports=class Product{
-    constructor(title,image,price,description,id){
+    constructor(title,image,price,description,id,userId){
 
         this.title=title;
         this.image=image;
@@ -23,6 +23,7 @@ module.exports=class Product{
         this.description=description;
        // this._id=id;
         this._id= id? new mongodb.ObjectId(id) : null;
+        this.userId=userId;
 
 
 
