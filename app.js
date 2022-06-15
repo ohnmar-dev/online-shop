@@ -17,7 +17,7 @@ const errorController=require('./controllers/errorController')
 app.use((req, res, next)=> {
     User.findById('62a41c7b02cb100923a7506f')
         .then(user => {
-            req.user = user;
+            req.user =new User(user.name,user.email,user.cart,user._id);
             next()
         })
         .catch(err=>console.log(err))

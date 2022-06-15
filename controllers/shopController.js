@@ -48,11 +48,16 @@ exports.getIndex=(req,res,next)=>{
  //for post cart
  exports.postCart=(req,res,next)=>{
    const pordId=req.body.productId;
-  Product.findById(pordId,product=>{
-    Cart.addProduct(pordId, product.price);
+  Product.findById(pordId)
+  .then(product=>{
+   return req.user.addToCart(product);
   })
-   
+  .then(result=>{
+    console.log(result)
     res.redirect('/')
+  })
+  .catch(err=>console.log(err))
+   
  }
 
   //for chackout
