@@ -39,22 +39,19 @@ exports.postController=(req,res,next)=>{
     const price=req.body.price;
     const description=req.body.description;
 
-    const product=new Product(title,
-        image,
-        price,
-        description,
-        null,
-        req.user._id
-        )
+    const product=new Product({
+        title:title,
+        image:image,
+        price:price,
+        description:description
+    })
+       
     product.save()
-    .then(result=>{
+    .then(()=>{
         console.log("Created product successfully!")
         res.redirect('/admin/products')
     })
-    .catch(err=>{
-        console.log(err)
-    })
-    res.redirect('/');
+    .catch(err=>console.log(err))
 
 }
 //post edit product
@@ -65,20 +62,24 @@ exports.postEditProduct=(req,res,next)=>{
     const updatePrice=req.body.price;
     const updateDescription=req.body.description;   
 
-    const updateProduct=new Product(
-       
-        updateTitle,
-        updateImage,
-        updatePrice,
-        updateDescription,
-        //new ObjectId(prodId)
-        prodId
-    );
-    updateProduct.save();
-    res.redirect('/admin/products')
+    Product.findById(prodId)
+            .then(product=>{
+                product.title=updateTitle;
+                product.image=updateImage;
+                product.price=updatePrice;
+                product.description=updateDescription;
+                return product.save()
+            })
+            .then(()=>{
+                console.log("update product")
+                res.redirect('/admin/products')
+            })
+            .catch(err=>console.log(err))
+
+   
 }
 exports.getProducts=(req,res,next)=>{
-   Product.fetchAll()
+   Product.find()
    .then(products=>{
     res.render('admin/product', {
         prods:products,
@@ -96,8 +97,9 @@ exports.getProducts=(req,res,next)=>{
 //delete controller
 exports.postDeleteController=(req,res,next)=>{
  const prodId=req.body.productId;
-    Product.deleteById(prodId)
+    Product.findByIdAndRemove(prodId)
     .then(result=>{
+        console.log("delete successfully!")
         res.redirect('/admin/products')
 
     })
