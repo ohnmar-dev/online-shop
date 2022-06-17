@@ -90,17 +90,23 @@ exports.getIndex=(req,res,next)=>{
 
   //for Orders
   exports.getOrder=(req,res,next)=>{
-    res.render('shop/orders',{
-      path:'/orders',
-      pageTitle:'Your Orders'
+    req.user.getOrder()
+    .then(orders=>{
+      res.render('shop/orders',{
+        path:'/orders',
+        pageTitle:'Your Orders',
+        orders:orders
+      })
     })
+    .catch(err=>console.log(err))
+    
   };
   
   //for post order
   exports.postOrder=(req,res,next)=>{
           req.user.addOrder()
             .then(()=>{
-              res.redirect('/order')
+              res.redirect('/orders')
             })
             .catch(err=>console.log(err))
   }
