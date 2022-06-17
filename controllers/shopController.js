@@ -1,6 +1,8 @@
 //class import from productModel
 const Product=require('../models/productModel')
 const Cart=require('../models/cartModel')
+const User=require('../models/user')
+
  
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
@@ -39,10 +41,16 @@ exports.getIndex=(req,res,next)=>{
 
  //for cart
  exports.getCart=(req,res,next)=>{
-   res.render('shop/cart',{
-     path:'/cart',
-     pageTitle:'Your Cart'
-   })
+  req.user.getCart()
+    .then(products=>{
+      res.render('shop/cart',{
+        path:'/cart',
+        pageTitle:'Your Cart',
+        products:products
+      })
+    })
+    .catch(err=>console.log(err))
+   
  };
 
  //for post cart
@@ -54,10 +62,22 @@ exports.getIndex=(req,res,next)=>{
   })
   .then(result=>{
     console.log(result)
-    res.redirect('/')
+    res.redirect('cart')
   })
   .catch(err=>console.log(err))
    
+ }
+
+ //for delete cart
+ exports.deleteCart=(req,res,next)=>{
+    const prodId=req.body.productId;
+    req.user
+      .deleteItemFromCart(prodId)
+      .then(()=>{
+        console.log("delete success")
+        res.redirect('/cart')
+      })
+      .catch(err=>console.log(err))
  }
 
   //for chackout
@@ -75,6 +95,15 @@ exports.getIndex=(req,res,next)=>{
       pageTitle:'Your Orders'
     })
   };
+  
+  //for post order
+  exports.postOrder=(req,res,next)=>{
+          req.user.addOrder()
+            .then(()=>{
+              res.redirect('/order')
+            })
+            .catch(err=>console.log(err))
+  }
 
   //for getDetail
   exports.getDetail=(req,res,next)=>{
