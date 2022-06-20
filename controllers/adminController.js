@@ -1,5 +1,5 @@
 const Product=require('../models/productModel')
-//const {ObjectId}=require('mongodb')
+
 
 exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
@@ -38,14 +38,14 @@ exports.postController=(req,res,next)=>{
     const image=req.body.image;
     const price=req.body.price;
     const description=req.body.description;
-
     const product=new Product({
         title:title,
         image:image,
         price:price,
-        description:description
+        description:description,
+        userId:req.user
     })
-       
+     
     product.save()
     .then(()=>{
         console.log("Created product successfully!")

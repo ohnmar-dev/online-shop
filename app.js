@@ -15,10 +15,11 @@ const shopRouter=require('./routes/shop')
 const errorController=require('./controllers/errorController')
 
 app.use((req, res, next)=> {
-    User.findById('62ac7d612bf3d05201e719a5')
+    User.findById('62afded3e350f55ace827fa0')
         .then(user => {
-            req.user =user;
+            req.user = user;
             next()
+            
         })
         .catch(err=>console.log(err))
 })
@@ -40,14 +41,14 @@ mongoogse.connect(
 .then(()=>{
     User.findOne().then(user=>{
         if(!user){
-            const user=new User({
+            const newuser=new User({
                 name:'pone pone',
                 email:'pone@gmail.com',
                 cart:{
-                    item:[]
+                    items:[]
                 }
             })
-            user.save();
+            newuser.save();
         }
     })
    
