@@ -12,10 +12,10 @@ router.get('/products',shopController.getProducts)
  //product detail page
  router.get('/products/:productId',shopController.getDetail)
 
-// router.get('/cart',shopController.getCart)
+router.get('/cart',shopController.getCart)
 
 // //post method
-// router.post('/cart',shopController.postCart)
+router.post('/cart',shopController.postCart)
 
 // //delete cart method
 // router.post('/delete-cart',shopController.deleteCart)
