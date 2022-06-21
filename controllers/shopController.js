@@ -2,6 +2,7 @@
 const Product=require('../models/productModel')
 const Cart=require('../models/cartModel')
 const User=require('../models/user')
+const Order=require('../models/order')
 
  
 //show data with fetchAll
@@ -41,8 +42,11 @@ exports.getIndex=(req,res,next)=>{
 
  //for cart
  exports.getCart=(req,res,next)=>{
-  req.user.getCart()
-    .then(products=>{
+  req.user
+  .populate('cart.items.productId')
+    .then(user=>{
+      const products=user.cart.items
+      console.log(user.cart.items)
       res.render('shop/cart',{
         path:'/cart',
         pageTitle:'Your Cart',
@@ -104,9 +108,24 @@ exports.getIndex=(req,res,next)=>{
   
   //for post order
   exports.postOrder=(req,res,next)=>{
-          req.user.addOrder()
+          req.user
+          .populate('cart.items.productId')
+            .then((user)=>{
+              const products=user.cart.items.map(i=>{
+                return {productId:i.productId,quantity:i.quantity}
+              })
+              const order=new Order({
+                user:{
+                  userId:req.user,
+                  name:req.user.name
+                },
+                products:products
+              })
+              return order.save( )
+            })
             .then(()=>{
               res.redirect('/orders')
+
             })
             .catch(err=>console.log(err))
   }
