@@ -94,7 +94,7 @@ exports.getIndex=(req,res,next)=>{
 
   //for Orders
   exports.getOrder=(req,res,next)=>{
-    req.user.getOrder()
+    Order.find({'user.userId':req.user._id})
     .then(orders=>{
       res.render('shop/orders',{
         path:'/orders',
@@ -122,6 +122,10 @@ exports.getIndex=(req,res,next)=>{
                 products:products
               })
               return order.save( )
+            })
+            .then(()=>{
+              return req.user.clearCart()
+              
             })
             .then(()=>{
               res.redirect('/orders')
