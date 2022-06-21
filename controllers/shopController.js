@@ -112,7 +112,7 @@ exports.getIndex=(req,res,next)=>{
           .populate('cart.items.productId')
             .then((user)=>{
               const products=user.cart.items.map(i=>{
-                return {productId:i.productId,quantity:i.quantity}
+                return {productId:{...i.productId._doc},quantity:i.quantity}
               })
               const order=new Order({
                 user:{
