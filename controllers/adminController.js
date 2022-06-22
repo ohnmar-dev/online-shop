@@ -24,7 +24,8 @@ exports.getEditProduct=(req,res,next)=>{
             pageTitle:"Edit Product",
             path:'/admin/edit',
             editing:editMode ,
-            product:product
+            product:product,
+            isAuthenticated:req.isLoggedIn
         })
     })
     .catch(err=>console.log(err))
@@ -86,7 +87,8 @@ exports.getProducts=(req,res,next)=>{
     res.render('admin/product', {
         prods:products,
         pageTitle:"Admin Product",
-        path:'/admin/products'
+        path:'/admin/products',
+        isAuthenticated:req.isLoggedIn
        
     })
    })

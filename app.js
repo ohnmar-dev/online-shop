@@ -12,6 +12,7 @@ app.set('views','views');
 
 const adminRouters=require('./routes/admin')
 const shopRouter=require('./routes/shop')
+const authRoutes=require('./routes/auth')
 const errorController=require('./controllers/errorController')
 
 app.use((req, res, next)=> {
@@ -27,6 +28,7 @@ app.use((req, res, next)=> {
 app.use(bodyParser.urlencoded({extended:false}))
 app.use('/admin',adminRouters)
 app.use(shopRouter)
+app.use(authRoutes);
 
 app.use(express.static(path.join(__dirname,'public')))
 app.use(errorController.getError)
