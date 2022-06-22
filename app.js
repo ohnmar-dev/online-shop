@@ -4,7 +4,7 @@ const express=require('express');
 const bodyParser=require('body-parser')
 const path=require('path')
 const app=express();
-
+const session=require('express-session')
 const User=require('./models/user')
 
 app.set('view engine', 'ejs')
@@ -14,6 +14,14 @@ const adminRouters=require('./routes/admin')
 const shopRouter=require('./routes/shop')
 const authRoutes=require('./routes/auth')
 const errorController=require('./controllers/errorController')
+
+//for expression session
+app.use(session({
+    secret:'my secret',
+    resave:false,
+    saveUninitialized:false,
+    // cookie:{maxAge}
+}))
 
 app.use((req, res, next)=> {
     User.findById('62afded3e350f55ace827fa0')
