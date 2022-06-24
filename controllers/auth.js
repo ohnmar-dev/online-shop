@@ -43,21 +43,21 @@ exports.postSignUp=(req,res,next)=>{
         if(userDoc){
           return res.redirect('/signup')
         }
-        return bcryptjs.hash(password,12)
-        
+        bcryptjs.hash(password,12)
+            .then((hashedPassword)=>{
+              const user=new User({
+                email:email,
+                password:hashedPassword,
+                cart:{items:[]}
+              })
+              
+              user.save()
+            })
+            .then(()=>{
+              res.redirect('/login')
+            })
       })
-      .then((hashedPassword)=>{
-        const user=new User({
-          email:email,
-          password:hashedPassword,
-          cart:{items:[]}
-        })
-        
-        user.save()
-      })
-      .then(()=>{
-        res.redirect('/login')
-      })
+      
       .catch(err=>console.log(err))
 }
 //for post logout
