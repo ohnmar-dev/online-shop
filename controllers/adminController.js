@@ -5,7 +5,9 @@ exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
         pageTitle:"Add Product",
         path:'/admin/add-product',
-        editing:false
+        editing:false,
+        isAuthenticated: req.session.isLoggedIn
+
     })
 }
 //get edit product
@@ -25,7 +27,7 @@ exports.getEditProduct=(req,res,next)=>{
             path:'/admin/edit',
             editing:editMode ,
             product:product,
-            isAuthenticated:req.isLoggedIn
+            isAuthenticated: req.session.isLoggedIn
         })
     })
     .catch(err=>console.log(err))
@@ -88,7 +90,7 @@ exports.getProducts=(req,res,next)=>{
         prods:products,
         pageTitle:"Admin Product",
         path:'/admin/products',
-        isAuthenticated:req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
        
     })
    })

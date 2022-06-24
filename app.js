@@ -15,11 +15,11 @@ const adminRouters=require('./routes/admin')
 const shopRouter=require('./routes/shop')
 const authRoutes=require('./routes/auth')
 const errorController=require('./controllers/errorController')
-const MONGO_URI='mongodb+srv://root:root@cluster0.gkh0oe5.mongodb.net/online-shop?retryWrites=true&w=majority'
+const MONGODB_URI='mongodb+srv://root:root@cluster0.gkh0oe5.mongodb.net/online-shop?retryWrites=true&w=majority'
 //for connect-mongodb-sesssion
 const store=new MongodbStore({
-    uri:MONGO_URI,
-    collection:'session'
+    uri:MONGODB_URI,
+    collection:'sessions'
 })
 
 //for expression session
@@ -27,12 +27,15 @@ app.use(session({
     secret:'my secret',
     resave:false,
     saveUninitialized:false,
-    newstore:store
+    store:store
     // cookie:{maxAge}
 }))
 
 app.use((req, res, next)=> {
-    User.findById('62afded3e350f55ace827fa0')
+    if(!req.session.user){
+        return next();
+    }
+    User.findById(req.session.user._id)
         .then(user => {
             req.user = user;
             next()
@@ -52,7 +55,7 @@ app.use(errorController.getError)
 
 
 mongoogse.connect(
-    uri,
+    MONGODB_URI,
     {useNewUrlParser:true, useUnifiedTopology:true}
     
 )
