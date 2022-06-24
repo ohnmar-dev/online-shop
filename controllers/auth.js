@@ -22,7 +22,38 @@ exports.postLogin=(req,res,next)=>{
         .catch(err=>console.log(err))
 }
 
+//for getSignUp
+exports.getSignUp=(req,res,next)=>{
+    res.render('auth/signUp',{
+        path:'/signUp',
+        pageTitle:'SignUp',
+        isAuthenticated:false
 
+    })
+     
+}
+//for postSignUp
+exports.postSignUp=(req,res,next)=>{
+    const email=req.body.email;
+    const password=req.body.password;
+    const confirmPassword=req.body.confirmPassword;
+    User.findOne({email:email})
+      .then((userDoc)=>{
+        if(userDoc){
+          return res.redirect('/signup')
+        }
+        const user=new User({
+          email:email,
+          password:password,
+          cart:{items:[]}
+        })
+        user.save()
+      })
+      .then(()=>{
+        res.redirect('/login')
+      })
+      .catch(err=>console.log(err))
+}
 //for post logout
 exports.postLogout=(req,res,next)=>{
   req.session.destroy((err)=>{

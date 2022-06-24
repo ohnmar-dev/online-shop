@@ -60,19 +60,6 @@ mongoogse.connect(
     
 )
 .then(()=>{
-    User.findOne().then(user=>{
-        if(!user){
-            const newuser=new User({
-                name:'pone pone',
-                email:'pone@gmail.com',
-                cart:{
-                    items:[]
-                }
-            })
-            newuser.save();
-        }
-    })
-   
     console.log("Connected !")
     app.listen(3000);
 })
