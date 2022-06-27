@@ -1,29 +1,31 @@
+
 const express=require('express')
 
 const shopController=require('../controllers/shopController')
+const isAuth=require('../middleware/is-Auth')
 
  const router=express.Router();
 //normal route | specific route
-router.get('/',shopController.getIndex)
+router.get('/',isAuth, shopController.getIndex)
 
-router.get('/products',shopController.getProducts)
+router.get('/products',isAuth, shopController.getProducts)
 
  //dynamic segment
  //product detail page
- router.get('/products/:productId',shopController.getDetail)
+ router.get('/products/:productId',isAuth, shopController.getDetail)
 
-router.get('/cart',shopController.getCart)
+router.get('/cart',isAuth, shopController.getCart)
 
 // //post method
-router.post('/cart',shopController.postCart)
+router.post('/cart',isAuth, shopController.postCart)
 
 // //delete cart method
-router.post('/delete-cart',shopController.deleteCart)
+router.post('/delete-cart',isAuth, shopController.deleteCart)
 
 // //for order post
-router.post('/create-order',shopController.postOrder)
+router.post('/create-order',isAuth, shopController.postOrder)
 
-router.get('/orders',shopController.getOrder)
+router.get('/orders',isAuth, shopController.getOrder)
 
 // router.get('/checkout',shopController.getCheckout)
 
