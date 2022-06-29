@@ -35,6 +35,7 @@ exports.postLogin=(req,res,next)=>{
                          res.redirect('/')
                     })
                         }
+                        req.flash('error','Invaild email or password')
                          res.redirect('/login')
                   })
                   .catch(err=>{
@@ -48,10 +49,17 @@ exports.postLogin=(req,res,next)=>{
 
 //for getSignUp
 exports.getSignUp=(req,res,next)=>{
+  let message=req.flash('error');
+  if(message.length>0){
+    message=message[0];
+  }else{
+    message=null;
+  }
     res.render('auth/signUp',{
         path:'/signUp',
         pageTitle:'SignUp',
-        isAuthenticated:false
+        isAuthenticated:false,
+        errorMessage:message
 
     })
      
@@ -64,6 +72,7 @@ exports.postSignUp=(req,res,next)=>{
     User.findOne({email:email})
       .then((userDoc)=>{
         if(userDoc){
+          req.flash('error','Email already exist, but pick other email')
           return res.redirect('/signup')
         }
         bcryptjs.hash(password,12)
