@@ -124,7 +124,7 @@ exports.getIndex=(req,res,next)=>{
               const order=new Order({
                 user:{
                   userId:req.user,
-                  name:req.user.name
+                  email:req.user.email
                 },
                 products:products
               })

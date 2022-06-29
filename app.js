@@ -7,6 +7,7 @@ const session=require('express-session')
 const MongodbStore=require('connect-mongodb-session')(session)
 const csrf=require('csurf');
 const csrfProtection = csrf();
+const flash= require('connect-flash')
 
 const errorController=require('./controllers/errorController')
 const User=require('./models/user')
@@ -41,7 +42,7 @@ app.use(session({
 
 //for csrf toker
 app.use(csrfProtection);
-
+app.use(flash());
 
 
 app.use((req, res, next)=> {
