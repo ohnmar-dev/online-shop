@@ -6,9 +6,9 @@ const isAuth=require('../middleware/is-Auth')
 
  const router=express.Router();
 //normal route | specific route
-router.get('/',isAuth, shopController.getIndex)
+router.get('/', shopController.getIndex)
 
-router.get('/products',isAuth, shopController.getProducts)
+router.get('/products', shopController.getProducts)
 
  //dynamic segment
  //product detail page

@@ -26,10 +26,10 @@ exports.postLogin=(req,res,next)=>{
                       req.session.user=user;
                       return req.session.save(err=>{
                         console.log(err);
-                        return res.redirect('/')
+                         res.redirect('/')
                     })
                         }
-                        return res.redirect('/login')
+                         res.redirect('/login')
                   })
                   .catch(err=>{
                     console.log(err)
