@@ -1,5 +1,18 @@
 const User=require('../models/user')
 const bcryptjs=require('bcryptjs')
+const nodemailer=require('nodemailer');
+
+const transporter=nodemailer.createTransport({
+  
+  service: 'gmail',
+  port: 465,
+  auth:{
+    user:'ohnmarhtay19301@gmail.com',
+    pass:'omh@G00GLE2O2O'
+  }
+});
+
+
 exports.getLogin = (req, res, next) => {
   let message=req.flash('error');
   if(message.length>0){
@@ -86,7 +99,13 @@ exports.postSignUp=(req,res,next)=>{
               user.save()
             })
             .then(()=>{
-              res.redirect('/login')
+              res.redirect('/login');
+              transporter.sendMail({
+                from:'ohnmarhtay19301@gmail.com',
+                to:email,
+                subject:'Success Singn Up',
+                html:'<h1>You are successfully singn up</h1>'
+              })
             })
       })
       
@@ -97,5 +116,21 @@ exports.postLogout=(req,res,next)=>{
   req.session.destroy((err)=>{
     console.log(err)
     res.redirect('/')
+  })
+}
+
+
+exports.getResetPassword=(req,res,next)=>{
+  let message=req.flash('error')
+  if(message.length>0){
+    message=message[0]
+  }else{
+    message=null;
+  }
+  res.render('auth/reset',{
+    path:'/reset',
+    pageTitle: 'Reset Password',
+    errorMessage:message
+
   })
 }

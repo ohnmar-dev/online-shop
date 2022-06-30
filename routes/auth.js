@@ -16,4 +16,8 @@ router.get('/signup',authController.getSignUp)
 
 //for post signup
 router.post('/signup',authController.postSignUp)
+
+//for reset password
+router.get('/reset',authController.getResetPassword)
+
 module.exports = router;
