@@ -82,9 +82,7 @@ exports.postEditProduct=(req,res,next)=>{
    
 }
 exports.getProducts=(req,res,next)=>{
-   Product.find()
-//    .select(' price image -_id')
-//    .populate('userId','name')
+   Product.find({userId:req.user._id})
    .then(products=>{ 
     res.render('admin/product', {
         prods:products,
