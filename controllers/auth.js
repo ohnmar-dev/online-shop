@@ -2,13 +2,11 @@ const User=require('../models/user')
 const bcryptjs=require('bcryptjs')
 const nodemailer=require('nodemailer');
 
-const transporter=nodemailer.createTransport({
-  
-  service: 'gmail',
-  port: 465,
-  auth:{
-    user:'ohnmarhtay19301@gmail.com',
-    pass:'omh@G00GLE2O2O'
+var transport = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+      user: "jokerchay588981@outlook.com",
+      pass: "ohnmar12232@"
   }
 });
 
@@ -100,13 +98,14 @@ exports.postSignUp=(req,res,next)=>{
             })
             .then(()=>{
               res.redirect('/login');
-              transporter.sendMail({
-                from:'ohnmarhtay19301@gmail.com',
+              transport.sendMail({
+                from:'jokerchay588981@outlook.com',
                 to:email,
                 subject:'Success Singn Up',
                 html:'<h1>You are successfully singn up</h1>'
               })
             })
+            .catch(err=>console.log(err))
       })
       
       .catch(err=>console.log(err))
