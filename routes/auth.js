@@ -1,7 +1,7 @@
 const express = require('express');
 
 const authController = require('../controllers/auth');
-const {check}=require('express-validator')
+const {check,body}=require('express-validator')
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.post('/logout',authController.postLogout)
 router.get('/signup',authController.getSignUp)
 
 //for post signup
-router.post('/signup',
+router.post('/signup',[
 check('email')
     .isEmail()
     .withMessage('Please enter your valid value')
@@ -25,7 +25,22 @@ check('email')
             throw new Error('The email address is forbidden')
         }
         return true;
-    }),
+}),
+body(
+    'password',
+    'Please enter password must be only number and text  at least 6 characters'
+)
+    .isLength({min:6,max:18})
+    .isAlphanumeric(),
+body('confirmPassword')
+    .custom((value,{req})=>{
+        if(value!==req.body.password){
+            throw new Error('Passwords have not match')
+        }
+        return true;
+    })
+
+],
                 
 authController.postSignUp)
 
