@@ -81,7 +81,12 @@ exports.getSignUp=(req,res,next)=>{
         path:'/signUp',
         pageTitle:'SignUp',
         isAuthenticated:false,
-        errorMessage:message
+        errorMessage:message,
+        oldInput:{
+          email:'',
+          password:'',
+          confirmPassword:''
+        }
 
     })
      
@@ -97,7 +102,12 @@ exports.postSignUp=(req,res,next)=>{
       return res.status(422).render('auth/signUp',{
         path:'/signUp',
         pageTitle:'SignUp',
-        errorMessage:errors.array()[0].msg
+        errorMessage:errors.array()[0].msg,
+        oldInput:{
+          email:email,
+          password:password,
+          confirmPassword:confirmPassword
+        }
       })
     }
    
