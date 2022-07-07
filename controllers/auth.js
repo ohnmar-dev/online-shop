@@ -86,7 +86,8 @@ exports.getSignUp=(req,res,next)=>{
           email:'',
           password:'',
           confirmPassword:''
-        }
+        },
+        validatinErrors:[]
 
     })
      
@@ -107,7 +108,8 @@ exports.postSignUp=(req,res,next)=>{
           email:email,
           password:password,
           confirmPassword:confirmPassword
-        }
+        },
+        validatinErrors:errors.array()
       })
     }
    
