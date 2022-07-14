@@ -25,7 +25,15 @@ exports.getLogin = (req, res, next) => {
       path: '/login',
       pageTitle: 'Login',
       isAuthenticated:false,
-      errorMessage: message
+      errorMessage: message,
+       // for old input
+       oldInput:{
+        email:'',
+        password:''
+      },
+      // for error red boder
+      validationError:[]
+
     });
   };
   
@@ -37,14 +45,33 @@ exports.postLogin=(req,res,next)=>{
       return res.status(422).render('auth/login',{
           path:'/login',
           pageTitle:'Login',
-          errorMessage:errors.array()[0].msg
+          errorMessage:errors.array()[0].msg,
+          // for old input
+          oldInput:{
+            email:email,
+            password:password
+          },
+          // for error red boder
+          validationError:errors.array()
+
       })
    }
    User.findOne({email:email})
         .then(user=>{
           if(!user){
-            req.flash('error','Invaild email or password')
-            return res.redirect('/login')
+            return res.status(422).render('auth/login',{
+              path:'/login',
+              pageTitle:'Login',
+              errorMessage:"Invalid email or password",
+              // for old input
+              oldInput:{
+                email:email,
+                password:password
+              },
+              // for error red boder
+              validationError:[]
+    
+          })
           }
           bcryptjs.compare(password,user.password)
                   .then(doMatch=>{
@@ -57,8 +84,19 @@ exports.postLogin=(req,res,next)=>{
                          res.redirect('/')
                     })
                         }
-                        req.flash('error','Invaild email or password')
-                         res.redirect('/login')
+                        return res.status(422).render('auth/login',{
+                          path:'/login',
+                          pageTitle:'Login',
+                          errorMessage:"Invalid email or password",
+                          // for old input
+                          oldInput:{
+                            email:email,
+                            password:password
+                          },
+                          // for error red boder
+                          validationError:[]
+                
+                      })
                   })
                   .catch(err=>{
                     console.log(err)
