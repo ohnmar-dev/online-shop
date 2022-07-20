@@ -1,12 +1,14 @@
 const Product=require('../models/productModel')
-
+const {validationResult}=require('express-validator')
 
 exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
         pageTitle:"Add Product",
         path:'/admin/add-product',
         editing:false,
-       
+        hasError:false,
+        errorMessage:null,
+        validationErrors:[]
 
     })
 }
@@ -27,6 +29,9 @@ exports.getEditProduct=(req,res,next)=>{
             path:'/admin/edit',
             editing:editMode ,
             product:product,
+            hasError:false,
+            errorMessage:null,
+            validationErrors:[]
            
         })
     })
@@ -41,6 +46,27 @@ exports.postController=(req,res,next)=>{
     const image=req.body.image;
     const price=req.body.price;
     const description=req.body.description;
+    const errors=validationResult(req);
+    if(!errors.isEmpty()){
+        console.log(errors.array())
+        return res.status(422).render('admin/edit',{
+            pageTitle:"Add Product",
+            path:'/admin/edit',
+            editing:false,
+            hasError:true,
+            product:{
+                title:title,
+                image:image,
+                price:price,
+                description:description,
+                
+
+            },
+            errorMessage:errors.array()[0].msg,
+            validationErrors:errors.array()
+
+        })
+    }
     const product=new Product({
         title:title,
         image:image,
@@ -63,7 +89,30 @@ exports.postEditProduct=(req,res,next)=>{
     const updateTitle=req.body.title;
     const updateImage=req.body.image;
     const updatePrice=req.body.price;
-    const updateDescription=req.body.description;   
+    const updateDescription=req.body.description;  
+    const errors=validationResult(req);
+    if(!errors.isEmpty()){
+        console.log(errors.array())
+        return res.status(422).render('admin/edit',{
+            pageTitle:"Edit  Product",
+            path:'/admin/edit',
+            editing:true,
+            hasError:true,
+            product:{
+                title:updateTitle,
+                image:updateImage,
+                price:updatePrice,
+                description:updateDescription,
+                _id:prodId
+                
+ 
+            },
+            errorMessage:errors.array()[0].msg,
+            validationErrors:errors.array()
+
+
+        })
+    }
 
     Product.findById(prodId)
             
