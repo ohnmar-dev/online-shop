@@ -45,19 +45,6 @@ app.use(csrfProtection);
 app.use(flash());
 
 
-app.use((req, res, next)=> {
-    if(!req.session.user){
-        return next();
-    }
-    User.findById(req.session.user._id)
-        .then(user => {
-            req.user = user;
-            next()
-            
-        })
-        .catch(err=>console.log(err))
-})
-
 //for csrf token
 app.use((req, res, next)=>{
     res.locals.isAuthenticated = req.session.isLoggedIn;
@@ -65,12 +52,41 @@ app.use((req, res, next)=>{
     next();
   });
   
+app.use((req, res, next)=> {
+   
+    if(!req.session.user){
+        return next();
+    }
+    User.findById(req.session.user._id)
+        .then(user => {
+            // throw new Error('Dummy')
+            if(!user){
+                return next()
+            }
+            req.user = user;
+            next()
+            
+        })
+        .catch(err=>{
+            next(new Error(err));
+        }
+            )
+})
+
 app.use('/admin',adminRouters)
 app.use(shopRouter)
 app.use(authRoutes);
 
+app.get('/500',errorController.get500)
 app.use(errorController.getError)
-
+app.use((error,req,res,next)=>{
+    // res.redirect('/500')
+    res.status(error.httpStatusCode).render('500',{
+        pageTitle:'ERROR!',
+        path:'/500',
+        isAuthenticated:req.session.isLoggedIn
+    })
+})
 
 
 mongoogse.connect(

@@ -19,8 +19,10 @@ exports.getProducts=(req,res,next)=>{
   
   })
   .catch(err=>{
-    console.log(err)
-  })
+    const error=new Error(err)
+    error.httpStatusCode=500;
+    return next(error);
+})
    
  }
 
@@ -38,8 +40,10 @@ exports.getIndex=(req,res,next)=>{
   
   })
   .catch(err=>{
-    console.log(err)
-  })
+    const error=new Error(err)
+    error.httpStatusCode=500;
+    return next(error);
+})
 
    
  }
@@ -58,8 +62,11 @@ exports.getIndex=(req,res,next)=>{
         
       })
     })
-    .catch(err=>console.log(err))
-   
+    .catch(err=>{
+      const error=new Error(err)
+      error.httpStatusCode=500;
+      return next(error);
+  })
  };
 
  //for post cart
@@ -73,7 +80,11 @@ exports.getIndex=(req,res,next)=>{
     console.log(result)
     res.redirect('cart')
   })
-  .catch(err=>console.log(err))
+  .catch(err=>{
+    const error=new Error(err)
+    error.httpStatusCode=500;
+    return next(error);
+})
    
  }
 
@@ -86,7 +97,11 @@ exports.getIndex=(req,res,next)=>{
         console.log("delete success")
         res.redirect('/cart')
       })
-      .catch(err=>console.log(err))
+      .catch(err=>{
+        const error=new Error(err)
+        error.httpStatusCode=500;
+        return next(error);
+    })
  }
 
   //for chackout
@@ -109,7 +124,11 @@ exports.getIndex=(req,res,next)=>{
         
       })
     })
-    .catch(err=>console.log(err))
+    .catch(err=>{
+      const error=new Error(err)
+      error.httpStatusCode=500;
+      return next(error);
+  })
     
   };
   
@@ -138,7 +157,11 @@ exports.getIndex=(req,res,next)=>{
               res.redirect('/orders')
 
             })
-            .catch(err=>console.log(err))
+            .catch(err=>{
+              const error=new Error(err)
+              error.httpStatusCode=500;
+              return next(error);
+          })
   }
 
   //for getDetail
@@ -154,9 +177,10 @@ exports.getIndex=(req,res,next)=>{
       })
     })
     .catch(err=>{
-      console.log(err)
-    })
-   
+      const error=new Error(err)
+      error.httpStatusCode=500;
+      return next(error);
+  })
     
   };
 
