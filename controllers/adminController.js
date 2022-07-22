@@ -51,7 +51,25 @@ exports.postController=(req,res,next)=>{
     const price=req.body.price;
     const description=req.body.description;
     const errors=validationResult(req);
-    console.log(image)
+
+    if(!image){
+        res.status(422).render('admin/edit',{
+            pageTitle:"Add Product",
+            path:'/admin/add-product',
+            editing:false,
+            hasError:true,
+            product:{
+                title:title,
+                price:price,
+                description:description,
+                
+
+            },
+            errorMessage:"do not match image",
+            validationErrors:[]
+        })
+    }
+    
     if(!errors.isEmpty()){
         console.log(errors.array())
         return res.status(422).render('admin/edit',{
@@ -72,9 +90,10 @@ exports.postController=(req,res,next)=>{
 
         })
     }
+    const imageUrl=image.path
     const product=new Product({
         title:title,
-        image:image,
+        image:imageUrl,
         price:price,
         description:description,
         userId:req.user

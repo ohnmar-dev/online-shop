@@ -9,6 +9,7 @@ const csrf=require('csurf');
 const csrfProtection = csrf();
 const flash= require('connect-flash')
 const multer=require('multer')
+const uuid4=require('uuid')
 
 const errorController=require('./controllers/errorController')
 const User=require('./models/user')
@@ -28,8 +29,27 @@ const adminRouters=require('./routes/admin')
 const shopRouter=require('./routes/shop')
 const authRoutes=require('./routes/auth')
 
+const fileStorage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'images')
+    },
+    filename:(req,file,cb)=>{
+        cb(null,uuid4.v4() +'-'+file.originalname)
+    }
+})
+const fileFilter=(req,file,cb)=>{
+    if(
+        file.mimetype==='image/png' ||
+        file.mimetype==='image/jpg' ||
+        file.mimetype==='image/jpeg' 
+    ){
+        cb(null,true)
+    }else{
+        cb(null,false)
+    }
+}
 app.use(bodyParser.urlencoded({extended:false}))
-app.use(multer({dest:'images'}).single('image'))
+app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'))
 app.use(express.static(path.join(__dirname,'public')))
 
 
