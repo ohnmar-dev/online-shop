@@ -1,5 +1,6 @@
 const Product=require('../models/productModel')
 const {validationResult}=require('express-validator')
+const { update } = require('../models/productModel')
 
 exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
@@ -115,10 +116,11 @@ exports.postController=(req,res,next)=>{
 exports.postEditProduct=(req,res,next)=>{
     const prodId=req.body.productId;
     const updateTitle=req.body.title;
-    const updateImage=req.body.image;
+    const updateImage=req.file;
     const updatePrice=req.body.price;
     const updateDescription=req.body.description;  
     const errors=validationResult(req);
+    
     if(!errors.isEmpty()){
         console.log(errors.array())
         return res.status(422).render('admin/edit',{
@@ -128,7 +130,6 @@ exports.postEditProduct=(req,res,next)=>{
             hasError:true,
             product:{
                 title:updateTitle,
-                image:updateImage,
                 price:updatePrice,
                 description:updateDescription,
                 _id:prodId
@@ -149,7 +150,10 @@ exports.postEditProduct=(req,res,next)=>{
                     return  res.redirect('/')
                   }
                 product.title=updateTitle;
-                product.image=updateImage;
+                if(updateImage){
+                    product.image=updateImage.path;
+
+                }
                 product.price=updatePrice;
                 product.description=updateDescription;
                 return product.save()
