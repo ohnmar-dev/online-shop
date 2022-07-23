@@ -6,7 +6,6 @@ const Order=require('../models/order')
 const fs=require('fs')
 const path=require('path')
 const PDFDocument=require('pdfkit')
- 
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
   Product.find()

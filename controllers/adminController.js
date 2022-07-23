@@ -1,6 +1,7 @@
 const Product=require('../models/productModel')
 const {validationResult}=require('express-validator')
 const { update } = require('../models/productModel')
+const fileHelper=require('../util/file')
 
 exports.getController=(req,res,next)=>{
     res.render('admin/edit', {
@@ -151,6 +152,7 @@ exports.postEditProduct=(req,res,next)=>{
                   }
                 product.title=updateTitle;
                 if(updateImage){
+                    fileHelper.deleteFile(product.image)
                     product.image=updateImage.path;
 
                 }
@@ -194,17 +196,25 @@ exports.getProducts=(req,res,next)=>{
 //delete controller
 exports.postDeleteController=(req,res,next)=>{
  const prodId=req.body.productId;
-    Product.deleteMany({_id:prodId,userId:req.user._id})
-    .then(result=>{
-        console.log("delete successfully!")
-        res.redirect('/admin/products')
+    Product.findById(prodId)
+        .then(product=>{
+            if(!product){
+                return next(new Error('Product not Found'))
+            }
+            fileHelper.deleteFile(product.image)
+            return Product.deleteOne({_id:prodId,userId:req.user._id})
+        })
+        
+        .then(result=>{
+            console.log("delete successfully!")
+            res.redirect('/admin/products')
 
-    })
-    .catch(err=>{
-        const error=new Error(err)
-        error.httpStatusCode=500;
-        return next(error);
-    })     
+        })
+        .catch(err=>{
+            const error=new Error(err)
+            error.httpStatusCode=500;
+            return next(error);
+        })     
     
 }
     
