@@ -51,6 +51,8 @@ const fileFilter=(req,file,cb)=>{
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(multer({storage:fileStorage, fileFilter:fileFilter}).single('image'))
 app.use(express.static(path.join(__dirname,'public')))
+app.use('/images',express.static(path.join(__dirname,'images')))
+
 
 
 //for expression session
@@ -103,7 +105,7 @@ app.get('/500',errorController.get500)
 app.use(errorController.getError)
 app.use((error,req,res,next)=>{
     // res.redirect('/500')
-    res.status(error.httpStatusCode).render('500',{
+    res.status(500).render('500',{
         pageTitle:'ERROR!',
         path:'/500',
         isAuthenticated:req.session.isLoggedIn

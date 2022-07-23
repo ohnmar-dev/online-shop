@@ -3,7 +3,8 @@ const Product=require('../models/productModel')
 const Cart=require('../models/cartModel')
 const User=require('../models/user')
 const Order=require('../models/order')
-
+  const fs=require('fs')
+  const path=require('path')
  
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
@@ -185,3 +186,32 @@ exports.getIndex=(req,res,next)=>{
   };
 
   
+
+  // for invoice download
+
+  exports.getInvoice=(req,res,next)=>{
+    const orderId=req.params.orderId;
+    Order.findById(orderId)
+      .then(order=>{
+        if(!order){
+          return next(new Error('Order Not found') )
+        
+         
+        }
+        if(order.user.userId.toString() !== req.user._id.toString()){
+          return next(new Error('Unauthorized') )
+        
+        }
+        const invoiceName='invoice-'+orderId+'.pdf'
+        const invoicePath=path.join('data','invoice',invoiceName)
+        fs.readFile(invoicePath,(err,data)=>{
+          if(err){
+            return next(err);
+          }
+          res.setHeader('Content-Type','application/pdf')
+          res.setHeader('Content-Disposition',`inline;filename=${invoicePath}`);
+          res.send(data);
+        })
+      })
+      .catch(err=>next(err))
+  }

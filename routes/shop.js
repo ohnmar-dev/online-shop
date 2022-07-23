@@ -29,4 +29,7 @@ router.get('/orders',isAuth, shopController.getOrder)
 
 // router.get('/checkout',shopController.getCheckout)
 
+// for invoice download
+router.get('/orders/:orderId',isAuth, shopController.getInvoice)
+
 module.exports=router;
