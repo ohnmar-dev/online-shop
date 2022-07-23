@@ -3,8 +3,9 @@ const Product=require('../models/productModel')
 const Cart=require('../models/cartModel')
 const User=require('../models/user')
 const Order=require('../models/order')
-  const fs=require('fs')
-  const path=require('path')
+const fs=require('fs')
+const path=require('path')
+const PDFDocument=require('pdfkit')
  
 //show data with fetchAll
 exports.getProducts=(req,res,next)=>{
@@ -202,8 +203,15 @@ exports.getIndex=(req,res,next)=>{
           return next(new Error('Unauthorized') )
         
         }
+        const pdfDoc=new PDFDocument();
         const invoiceName='invoice-'+orderId+'.pdf'
         const invoicePath=path.join('data','invoice',invoiceName)
+        res.setHeader('Content-Type','application/pdf')
+        res.setHeader('Content-Disposition',`inline;filename=${invoicePath}`)
+        pdfDoc.pipe(fs.createWriteStream(invoicePath))
+        pdfDoc.pipe(res)
+        pdfDoc.text('Hello World')
+        pdfDoc.end()
         // fs.readFile(invoicePath,(err,data)=>{
         //   if(err){
         //     return next(err);
@@ -212,10 +220,10 @@ exports.getIndex=(req,res,next)=>{
         //   res.setHeader('Content-Disposition',`inline;filename=${invoicePath}`);
         //   res.send(data);
         // })
-        const file=fs.createReadStream(invoicePath)
-        res.setHeader('Content-Type','application/pdf')
-        res.setHeader('Content-Disposition',`inline;filename=${invoicePath}`)
-        file.pipe(res)
+        // const file=fs.createReadStream(invoicePath)
+        // res.setHeader('Content-Type','application/pdf')
+        // res.setHeader('Content-Disposition',`inline;filename=${invoicePath}`)
+        // file.pipe(res)
       })
       .catch(err=>next(err))
   }
